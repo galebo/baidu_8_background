@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.galebo.baidu8.front.models.Home;
 import com.galebo.baidu8.front.models.Product;
+import com.galebo.baidu8.front.models.Home.Banner;
 
 @Controller
 public class PublicController {
@@ -60,6 +62,26 @@ public class PublicController {
 	    player.setZiChan("40000");
 	    products.add(player) ;
 		return  products;
+    }
+	@RequestMapping("/j_home")
+	@ResponseBody
+    public Object getJHome()  {
+		Home home=new Home();
+		ArrayList<Banner> banners = new ArrayList<Home.Banner>();
+		Banner banner = new Banner();
+		banner.setImg("http://localhost:8080/images/banner1.png");
+		banner.setUrl("http://localhost:8080/images/banner1.png");
+		banners.add(banner);
+		banner = new Banner();
+		banner.setImg("http://localhost:8080/images/banner2.png");
+		banner.setUrl("http://localhost:8080/images/banner1.png");
+		banners.add(banner);
+		banner = new Banner();
+		banner.setImg("http://localhost:8080/images/banner3.png");
+		banner.setUrl("http://localhost:8080/images/banner1.png");
+		banners.add(banner);
+		home.setBanners(banners);
+		return home;
     }
 
 
