@@ -6,18 +6,21 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.galebo.baidu8.front.models.Home;
-import com.galebo.baidu8.front.models.Product;
 import com.galebo.baidu8.front.models.Home.Banner;
+import com.galebo.baidu8.front.models.My.ShouYi;
+import com.galebo.baidu8.front.models.My.ShouYis;
+import com.galebo.baidu8.front.models.Product;
 
 @Controller
 public class PublicController {
 	static Logger log=Logger.getLogger(PublicController.class);
 
 	
-	@RequestMapping("/j_room")
+	@RequestMapping("/j_products")
 	@ResponseBody
     public Object getJroom()  {
 		List<Product> products=new ArrayList<Product>();
@@ -69,22 +72,40 @@ public class PublicController {
 		Home home=new Home();
 		ArrayList<Banner> banners = new ArrayList<Home.Banner>();
 		Banner banner = new Banner();
-		banner.setImg("http://localhost:8080/images/banner1.png");
-		banner.setUrl("http://localhost:8080/images/banner1.png");
+		banner.setImg("http://107.170.199.9:9080/images/banner1.png");
+		banner.setUrl("http://google.com");
 		banners.add(banner);
 		banner = new Banner();
-		banner.setImg("http://localhost:8080/images/banner2.png");
-		banner.setUrl("http://localhost:8080/images/banner1.png");
+		banner.setImg("http://107.170.199.9:9080/images/banner2.png");
+		banner.setUrl("tel://555-1234");
 		banners.add(banner);
 		banner = new Banner();
-		banner.setImg("http://localhost:8080/images/banner3.png");
-		banner.setUrl("http://localhost:8080/images/banner1.png");
+		banner.setImg("http://107.170.199.9:9080/images/banner3.png");
+		banner.setUrl("http://maps.google.com/maps?q=pizza");
 		banners.add(banner);
 		home.setBanners(banners);
 		return home;
     }
-
-
-	
+	String[][] names=new String[][]{{"投钱","赎回","赎回","赎回"},{"收益","收益","收益","收益"},
+			{"成功","成功","成功","失败"},{"建设银行","招商银行","建设银行","建设银行"}};
+	@RequestMapping("/j_shuyi")
+	@ResponseBody
+    public ShouYis j_shuyi(@RequestParam(value="page")Integer page)  {
+		return get(page,1);
+    }
+	@RequestMapping("/j_zhuang")
+	@ResponseBody
+    public ShouYis j_zhuang(@RequestParam(value="page")Integer page)  {
+		return get(page,0);
+    }
+	private ShouYis get(Integer page, int index) {
+		ShouYis home=new ShouYis();
+		ArrayList<ShouYi> shouYis = new ArrayList<ShouYi>();
+		for (int i = 0; i < 10; i++) {
+			shouYis.add(new ShouYi(names[index][i%4], "2010-09-"+((page+10)%30), ""+(3000+i), names[index+2][i%4]));
+		}
+		home.setShouYis(shouYis);
+		return home;
+	}
 	
 }
