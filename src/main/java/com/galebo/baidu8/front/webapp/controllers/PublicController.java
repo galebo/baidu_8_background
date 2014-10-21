@@ -88,12 +88,12 @@ public class PublicController {
     }
 	String[][] names=new String[][]{{"投钱","赎回","赎回","赎回"},{"收益","收益","收益","收益"},
 			{"成功","成功","成功","失败"},{"建设银行","招商银行","建设银行","建设银行"}};
-	@RequestMapping("/j_shuyi")
+	@RequestMapping("/j_shouyi")
 	@ResponseBody
     public ShouYis j_shuyi(@RequestParam(value="page")Integer page)  {
 		return get(page,1);
     }
-	@RequestMapping("/j_zhuang")
+	@RequestMapping("/j_zhang")
 	@ResponseBody
     public ShouYis j_zhuang(@RequestParam(value="page")Integer page)  {
 		return get(page,0);
@@ -101,8 +101,10 @@ public class PublicController {
 	private ShouYis get(Integer page, int index) {
 		ShouYis home=new ShouYis();
 		ArrayList<ShouYi> shouYis = new ArrayList<ShouYi>();
-		for (int i = 0; i < 10; i++) {
-			shouYis.add(new ShouYi(names[index][i%4], "2010-09-"+((page+10)%30), ""+(3000+i), names[index+2][i%4]));
+		if(page<5){
+			for (int i = 0; i < 10; i++) {
+				shouYis.add(new ShouYi(names[index][i%4], "2010-09-"+((page+10)%30), ""+(3000+i+page*10), names[index+2][i%4]));
+			}
 		}
 		home.setShouYis(shouYis);
 		return home;
