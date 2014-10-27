@@ -2,15 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="dataGeter" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">             
-    	<property name="targetObject"> <ref bean="dataGeter"/></property>             
+    <bean id="dataGetterJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">             
+    	<property name="targetObject"> <ref bean="dataGetter"/></property>             
     	<property name="targetMethod"> <value>exe</value></property>         
     </bean>
     
     
 	<bean id="dataGeterTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">             
-		<property name="jobDetail"><ref bean="dataGeter"/></property>             
-		<property name="cronExpression"><value>0 59 23 * * ?</value></property>         
+		<property name="jobDetail"><ref bean="dataGetterJob"/></property>             
+		<property name="cronExpression"><value>0 30 10 * * ?</value></property>         
 	</bean>
 	
 	<!-- 启动自动任务 -->

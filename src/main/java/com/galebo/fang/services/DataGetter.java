@@ -9,9 +9,11 @@ import java.util.Calendar;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-@Service("dateGetter")
+@Service("dataGetter")
 public class DataGetter {
+	static Logger log=Logger.getLogger(DataGetter.class);
 
 	private String sendHttp(String url){
 		HttpClient client = new HttpClient();
@@ -41,10 +43,9 @@ public class DataGetter {
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		String format = sdf.format( calendar.getTime());
 		
-		System.out.println(format);
-		System.out.println(date.find(format,"期房网上签约","网上签约套数"));
-		System.out.println(date.find(format,"现房网上签约","网上签约套数"));
-		System.out.println(date.find(format,"存量房网上签约","网上签约套数"));
+		log.info(date.find(format,"期房网上签约","网上签约套数"));
+		log.info(date.find(format,"现房网上签约","网上签约套数"));
+		log.info(date.find(format,"存量房网上签约","网上签约套数"));
 	}
 	private String find(String date,String big,String big2){
 		String table=null;
@@ -70,6 +71,7 @@ public class DataGetter {
 			start = indexOf(table,"<span",start);
 			start = indexOf(table,">",start+6);
 			int end = indexOf(table,"</span>",start);
+			log.info(date+big+":"+table.substring(start+1, end));
 			return table.substring(start+1, end);
 		}
 	}

@@ -13,6 +13,9 @@
 	<logger name="com.galebo.baidu8">
         <level value="INFO"/>
     </logger>
+	<logger name="com.galebo.fang">
+        <level value="INFO"/>
+    </logger>
     <root>
         <level value="FATAL"/>
         <appender-ref ref="CONSOLE"/>

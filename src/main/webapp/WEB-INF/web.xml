@@ -16,6 +16,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
             classpath:/applicationContext-resources.xml
+            classpath:/applicationContext-quartz.xml
             /WEB-INF/dispatcher-servlet.xml
         </param-value>
 	</context-param>
