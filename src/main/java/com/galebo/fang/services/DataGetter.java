@@ -10,11 +10,17 @@ import java.util.Calendar;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 @Service("dataGetter")
 public class DataGetter {
 	static Logger log=Logger.getLogger(DataGetter.class);
 
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 	private String sendHttp(String url){
 		HttpClient client = new HttpClient();
 		GetMethod method = new GetMethod(url);
@@ -36,16 +42,48 @@ public class DataGetter {
 			throw new RuntimeException("网络异常");
 		}
 	}
+	class Fang{
+		int qiFang;
+		int xianFang;
+		int cunLiangFang;
+		String date;
+		public String getDate() {
+			return date;
+		}
+		public void setDate(String date) {
+			this.date = date;
+		}
+		public int getQiFang() {
+			return qiFang;
+		}
+		public void setQiFang(int qiFang) {
+			this.qiFang = qiFang;
+		}
+		public int getXianFang() {
+			return xianFang;
+		}
+		public void setXianFang(int xianFang) {
+			this.xianFang = xianFang;
+		}
+		public int getCunLiangFang() {
+			return cunLiangFang;
+		}
+		public void setCunLiangFang(int cunLiangFang) {
+			this.cunLiangFang = cunLiangFang;
+		}
+	}
 	public void exe(){
-		DataGetter date=new DataGetter();
+		DataGetter dataGetter=new DataGetter();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
-		String format = sdf.format( calendar.getTime());
-		
-		log.info(date.find(format,"期房网上签约","网上签约套数"));
-		log.info(date.find(format,"现房网上签约","网上签约套数"));
-		log.info(date.find(format,"存量房网上签约","网上签约套数"));
+		String date = sdf.format( calendar.getTime());
+		Fang fang=new Fang();
+		fang.cunLiangFang=Integer.valueOf(dataGetter.find(date,"存量房网上签约","网上签约套数"));
+		fang.xianFang=Integer.valueOf(dataGetter.find(date,"现房网上签约","网上签约套数"));
+		fang.qiFang=Integer.valueOf(dataGetter.find(date,"期房网上签约","网上签约套数"));
+		fang.setDate(date);
+		jdbcTemplate.update("insert into data (`key`,`type`,`json`)values(?,?,?)",new Object[]{date,"1",JSON.toJSONString(fang)});
 	}
 	private String find(String date,String big,String big2){
 		String table=null;
