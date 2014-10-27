@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.galebo.fang.models.Summery;
+import com.galebo.fang.models.Summery.Fang;
 @Service("dataGetter")
 public class DataGetter {
 	static Logger log=Logger.getLogger(DataGetter.class);
@@ -42,48 +44,33 @@ public class DataGetter {
 			throw new RuntimeException("网络异常");
 		}
 	}
-	class Fang{
-		int qiFang;
-		int xianFang;
-		int cunLiangFang;
-		String date;
-		public String getDate() {
-			return date;
-		}
-		public void setDate(String date) {
-			this.date = date;
-		}
-		public int getQiFang() {
-			return qiFang;
-		}
-		public void setQiFang(int qiFang) {
-			this.qiFang = qiFang;
-		}
-		public int getXianFang() {
-			return xianFang;
-		}
-		public void setXianFang(int xianFang) {
-			this.xianFang = xianFang;
-		}
-		public int getCunLiangFang() {
-			return cunLiangFang;
-		}
-		public void setCunLiangFang(int cunLiangFang) {
-			this.cunLiangFang = cunLiangFang;
-		}
-	}
+	
 	public void exe(){
 		DataGetter dataGetter=new DataGetter();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		String date = sdf.format( calendar.getTime());
-		Fang fang=new Fang();
-		fang.cunLiangFang=Integer.valueOf(dataGetter.find(date,"存量房网上签约","网上签约套数"));
-		fang.xianFang=Integer.valueOf(dataGetter.find(date,"现房网上签约","网上签约套数"));
-		fang.qiFang=Integer.valueOf(dataGetter.find(date,"期房网上签约","网上签约套数"));
-		fang.setDate(date);
-		jdbcTemplate.update("insert into data (`key`,`type`,`json`)values(?,?,?)",new Object[]{date,"1",JSON.toJSONString(fang)});
+		Summery summery=new Summery();
+		String big2 = "网上签约套数：";
+		{
+			Fang fang=new Fang();
+			fang.setCunLiangFang(Integer.valueOf(dataGetter.find(date,"存量房网上签约",big2)));
+			fang.setXianFang(Integer.valueOf(dataGetter.find(date,"现房网上签约",big2)));
+			fang.setQiFang(Integer.valueOf(dataGetter.find(date,"期房网上签约",big2)));
+			summery.setAllFang(fang);
+		}
+			big2 = "住宅套数";
+		{
+			Fang fang=new Fang();
+			fang.setCunLiangFang(Integer.valueOf(dataGetter.find(date,"存量房网上签约","住宅签约套数：")));
+			fang.setXianFang(Integer.valueOf(dataGetter.find(date,"现房网上签约",big2)));
+			fang.setQiFang(Integer.valueOf(dataGetter.find(date,"期房网上签约",big2)));
+			summery.setZhuZhai(fang);
+		}
+		System.out.println(JSON.toJSONString(summery));
+		summery.setDate(date);
+		jdbcTemplate.update("insert into data (`key`,`type`,`json`)values(?,?,?)",new Object[]{date,"1",JSON.toJSONString(summery)});
 	}
 	private String find(String date,String big,String big2){
 		String table=null;
@@ -106,6 +93,8 @@ public class DataGetter {
 		}
 		{
 			int start = indexOf(table,big2);
+			if(start==-1)
+				start = indexOf(table,big2);
 			start = indexOf(table,"<span",start);
 			start = indexOf(table,">",start+6);
 			int end = indexOf(table,"</span>",start);
@@ -116,17 +105,18 @@ public class DataGetter {
 	private int indexOf(String str,String find){
 		int indexof=str.indexOf(find);
 		if(indexof==-1)
-			throw new RuntimeException("无此数据");
+			throw new RuntimeException(find+"无此数据");
 		return indexof;
 	}
-	private int indexOf(String str,String find,int start){
+	private int indexOf(String str,String find,int start){	
 		int indexof=str.indexOf(find,start);
 		if(indexof==-1)
-			throw new RuntimeException("无此数据");
+			throw new RuntimeException(find+"无此数据");
 		return indexof;
 	}
 	public static void main(String[] args) {
-		DataGetter dg=new DataGetter();
-		dg.exe();
+		/*DataGetter dg=new DataGetter();
+		dg.exe();*/
+		
 	}
 }
