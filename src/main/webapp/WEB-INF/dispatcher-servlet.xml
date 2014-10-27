@@ -13,6 +13,7 @@
 
     <!-- 设置使用注解的类所在的jar包 -->
     <context:component-scan base-package="com.galebo.baidu8.front"/>
+    <context:component-scan base-package="com.galebo.fang"/>
     <!-- 启用spring mvc专用注解 -->
 	<mvc:annotation-driven  />
     
