@@ -13,7 +13,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -139,9 +138,4 @@ public class DataGetter {
 		return indexof;
 	}
 
-	public static void main(String[] args) {
-		ClassPathXmlApplicationContext ac=new ClassPathXmlApplicationContext(new String[]{"applicationContext-resources.xml"});
-		DataGetter dg= (DataGetter) ac.getBean("dataGetter"); 
-		dg.exe();
-	}
 }
