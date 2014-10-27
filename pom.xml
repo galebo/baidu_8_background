@@ -5,7 +5,7 @@
 	<groupId>com.galebo</groupId>
 	<artifactId>baidu8</artifactId>
 	<packaging>war</packaging>
-	<version>V100R100B105</version>
+	<version>1.3</version>
 
 	<name>galebo</name>
 	<url>http://www.galebo.com</url>
