@@ -81,11 +81,13 @@ public class DataGetter {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}else{
+			log.info(key+"已处理");
 		}
 	}
 
 	private boolean exist( String key) {
-		return jdbcTemplate.queryForInt("select count(key) from data where key =? and type=1", new Object[] { key})>0;
+		return jdbcTemplate.queryForInt("select count(`key`) from data where `key` =? and type=1", new Object[] { key})>0;
 	}
 	private void insertData(String type, String key, String json) {
 		jdbcTemplate.update("insert into data (`key`,`type`,`json`)values(?,?,?)", new Object[] { key, type, json });
