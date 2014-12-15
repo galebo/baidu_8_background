@@ -51,37 +51,42 @@ public class DataGetter {
 
 	public void exe() {
 		DataGetter dataGetter = new DataGetter();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d");
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		String date = sdf.format(calendar.getTime());
 		Summery summery = new Summery();
 		String big2 = "网上签约套数：";
 		String key = date;
-		{
-			Fang fang = new Fang();
-			fang.setCunLiangFang(Integer.valueOf(dataGetter.find(key, "存量房网上签约", big2)));
-			fang.setXianFang(Integer.valueOf(dataGetter.find(key, "现房网上签约", big2)));
-			fang.setQiFang(Integer.valueOf(dataGetter.find(key, "期房网上签约", big2)));
-			summery.setAllFang(fang);
-		}
-		big2 = "住宅套数";
-		{
-			Fang fang = new Fang();
-			fang.setCunLiangFang(Integer.valueOf(dataGetter.find(key, "存量房网上签约", "住宅签约套数：")));
-			fang.setXianFang(Integer.valueOf(dataGetter.find(key, "现房网上签约", big2)));
-			fang.setQiFang(Integer.valueOf(dataGetter.find(key, "期房网上签约", big2)));
-			summery.setZhuZhai(fang);
-		}
-		summery.setDate(key);
-		insertData("1", key, JSON.toJSONString(summery));
-		try {
-			FileUtils.writeStringToFile(new File("bjjs"+date+".html"),getHtml(),"utf-8");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(!exist(key)){
+			{
+				Fang fang = new Fang();
+				fang.setCunLiangFang(Integer.valueOf(dataGetter.find(key, "存量房网上签约", big2)));
+				fang.setXianFang(Integer.valueOf(dataGetter.find(key, "现房网上签约", big2)));
+				fang.setQiFang(Integer.valueOf(dataGetter.find(key, "期房网上签约", big2)));
+				summery.setAllFang(fang);
+			}
+			big2 = "住宅套数";
+			{
+				Fang fang = new Fang();
+				fang.setCunLiangFang(Integer.valueOf(dataGetter.find(key, "存量房网上签约", "住宅签约套数：")));
+				fang.setXianFang(Integer.valueOf(dataGetter.find(key, "现房网上签约", big2)));
+				fang.setQiFang(Integer.valueOf(dataGetter.find(key, "期房网上签约", big2)));
+				summery.setZhuZhai(fang);
+			}
+			summery.setDate(key);
+			insertData("1", key, JSON.toJSONString(summery));
+			try {
+				FileUtils.writeStringToFile(new File("bjjs"+date+".html"),getHtml(),"utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
+	private boolean exist( String key) {
+		return jdbcTemplate.queryForInt("select count(key) from data where key =? and type=1", new Object[] { key})>0;
+	}
 	private void insertData(String type, String key, String json) {
 		jdbcTemplate.update("insert into data (`key`,`type`,`json`)values(?,?,?)", new Object[] { key, type, json });
 	}
@@ -127,14 +132,14 @@ public class DataGetter {
 	private int indexOf(String str, String find) {
 		int indexof = str.indexOf(find);
 		if (indexof == -1)
-			throw new RuntimeException(find + "无此数据");
+			throw new RuntimeException(str+","+find + "无此数据");
 		return indexof;
 	}
 
 	private int indexOf(String str, String find, int start) {
 		int indexof = str.indexOf(find, start);
 		if (indexof == -1)
-			throw new RuntimeException(find + "无此数据");
+			throw new RuntimeException(str+","+find + "无此数据");
 		return indexof;
 	}
 
