@@ -41,8 +41,8 @@ public class TestLiCai {
 	public static void main(String[] args) {
 		int i=1;
 		while(i++<60){
-			String json = HttpTookit.doGet(null, "https://licai.lianjia.com/manageMoney/sort?sortType=0&page=1&num=5&t=HefHEmjj");
-			//System.out.println(json);
+			String json = HttpTookit.doGet(null, "https://licai.lianjia.com/manageMoney/sort?sortType=0&page=1&num=5&t=s2DzaGSZ");
+			System.out.println(json);
 			
 			LiCai liCai=JSON.parseObject(json, LiCai.class);
 			for (Data data : liCai.getData()) {

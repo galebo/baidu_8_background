@@ -1,6 +1,5 @@
 package com.galebo;
 
-
 import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -10,7 +9,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-
 
 
 public final class HttpTookit { 
